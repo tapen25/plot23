@@ -3,6 +3,9 @@ const playBtn = document.getElementById('playButton');
 const slider = document.getElementById('speedSlider');
 const speedDisplay = document.getElementById('speedDisplay');
 
+const rmsValueDisplay = document.getElementById('rmsValueDisplay');
+const rmsBar = document.getElementById('rmsBar');
+
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 const baseAudioFile = 'kanon_1.10x.wav'; 
@@ -19,6 +22,8 @@ let targetActivity = 0.0; // センサーが検知した「揺れ」の目標値
 let currentActivity = 0.0; // スムージング後の現在の「揺れ」
 const SMOOTHING = 0.05; // スムージング係数 (小さいほど滑らか)
 let motionListenerAttached = false; // センサー許可フラグ
+
+const MAX_VISUAL_ACTIVITY = 12.0;
 
 // === 3. オーディオファイルの読み込み ===
 
@@ -151,7 +156,16 @@ function handleMotion(event) {
 function mainLoop() {
     // 1. センサーの目標値に向かって現在の値を滑らかに（スムージング）
     currentActivity += (targetActivity - currentActivity) * SMOOTHING;
-
+    // 1A. テキスト表示を更新 (小数点以下2桁)
+    rmsValueDisplay.textContent = currentActivity.toFixed(2);
+    
+    // 1B. バーのパーセンテージを計算
+    // (現在の揺れ / 視覚的な最大値) * 100。 ただし100%を上限とする
+    const percentage = Math.min(currentActivity / MAX_VISUAL_ACTIVITY, 1) * 100;
+    
+    // 1C. バーのスタイル(width)を更新
+    rmsBar.style.width = percentage + '%';
+    
     // 2. 「揺れ」の値(currentActivity)を、指定の区切りで速度にマッピング
     let targetSpeed;
     if (currentActivity < 2) {
