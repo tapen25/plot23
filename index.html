@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>シームレス・クロスフェード・スライダー</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        /* スライダーの見た目を調整 */
+        input[type="range"] {
+            width: 80%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>マリオギャラクシー式 クロスフェード</h2>
+    <p>6つの音源（1.10x 〜 1.35x）をスライダーでシームレスに切り替えます。</p>
+
+    <button id="playButton" disabled>読み込み中...</button>
+    <p>
+        <input 
+            type="range" 
+            id="speedSlider" 
+            min="1.10" 
+            max="1.35" 
+            step="0.001" 
+            value="1.10"
+            disabled
+        >
+    </p>
+    <p>現在の速度: <span id="speedDisplay">1.100</span>x</p>
+
+    <script src="audio.js"></script>
+</body>
+</html>
